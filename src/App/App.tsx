@@ -10,11 +10,7 @@ export function App() {
         the CDC
       </header>
 
-      <main>
-        <p>words</p>
-
-        <GraphContainer />
-      </main>
+      <GraphContainer />
     </div>
   );
 }
