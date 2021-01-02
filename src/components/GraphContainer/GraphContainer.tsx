@@ -51,24 +51,23 @@ export const GraphContainer = () => {
 
 interface IChartFormattedData {
   Month: string;
-  "2019 Deaths": number;
-  "2020 Deaths": number;
+  "2019 Deaths"?: number;
+  "2020 Deaths"?: number;
 }
 const formatChartData = (data: ICDCData[]): IChartFormattedData[] => {
-  // initialize all months+years to zero as we will not have all data
   const monthObject = {
-    January: { 2019: 0, 2020: 0 },
-    February: { 2019: 0, 2020: 0 },
-    March: { 2019: 0, 2020: 0 },
-    April: { 2019: 0, 2020: 0 },
-    May: { 2019: 0, 2020: 0 },
-    June: { 2019: 0, 2020: 0 },
-    July: { 2019: 0, 2020: 0 },
-    August: { 2019: 0, 2020: 0 },
-    September: { 2019: 0, 2020: 0 },
-    October: { 2019: 0, 2020: 0 },
-    November: { 2019: 0, 2020: 0 },
-    December: { 2019: 0, 2020: 0 },
+    January: { 2019: undefined, 2020: undefined },
+    February: { 2019: undefined, 2020: undefined },
+    March: { 2019: undefined, 2020: undefined },
+    April: { 2019: undefined, 2020: undefined },
+    May: { 2019: undefined, 2020: undefined },
+    June: { 2019: undefined, 2020: undefined },
+    July: { 2019: undefined, 2020: undefined },
+    August: { 2019: undefined, 2020: undefined },
+    September: { 2019: undefined, 2020: undefined },
+    October: { 2019: undefined, 2020: undefined },
+    November: { 2019: undefined, 2020: undefined },
+    December: { 2019: undefined, 2020: undefined },
   };
   data.forEach(
     (item) => (monthObject[item.month][item.year] = item.data_value)
@@ -159,7 +158,7 @@ const LineChartByYear = ({ data }: { data: ICDCData[] }) => {
       <XAxis dataKey="Month" />
       <YAxis />
       <Tooltip />
-      <Legend />
+      <Legend margin={{ top: 15 }} />
       <Line dataKey="2019 Deaths" stroke="#8884d8" />
       <Line dataKey="2020 Deaths" stroke="#82ca9d" />
     </LineChart>
