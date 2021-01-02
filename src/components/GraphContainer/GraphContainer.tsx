@@ -1,16 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import {
-  LineChart,
+  CartesianGrid,
+  Legend,
   Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
 } from "recharts";
 
-// data source: https://dev.socrata.com/foundry/data.cdc.gov/hmz2-vwda
 const baseUrl = "https://data.cdc.gov/resource/hmz2-vwda.json";
 const wholeUS = "state=UNITED%20STATES";
 const numberOfDeaths = "indicator=Number%20of%20Deaths";
@@ -143,24 +143,23 @@ const LineChartByYear = ({ data }: { data: ICDCData[] }) => {
   }, [data]);
 
   return (
-    <LineChart
-      width={500}
-      height={300}
-      data={formattedData}
-      margin={{
-        top: 20,
-        right: 30,
-        left: 20,
-        bottom: 5,
-      }}
-    >
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="Month" />
-      <YAxis />
-      <Tooltip />
-      <Legend margin={{ top: 15 }} />
-      <Line dataKey="2019 Deaths" stroke="#8884d8" />
-      <Line dataKey="2020 Deaths" stroke="#82ca9d" />
-    </LineChart>
+    <ResponsiveContainer width={500} height={300}>
+      <LineChart
+        data={formattedData}
+        margin={{
+          top: 20,
+          right: 30,
+          left: 20,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="Month" />
+        <YAxis type="number" domain={["dataMin", "dataMax"]} />
+        <Tooltip />
+        <Legend verticalAlign="top" height={36} />
+        <Line dataKey="2019 Deaths" stroke="#8884d8" />
+        <Line dataKey="2020 Deaths" stroke="#82ca9d" />
+      </LineChart>
+    </ResponsiveContainer>
   );
 };
