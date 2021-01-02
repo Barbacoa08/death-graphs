@@ -3,6 +3,8 @@ import { GraphContainer } from "components";
 import "./App.css";
 
 export function App() {
+  // article with links:
+  // https://usafacts.org/articles/preliminary-us-death-statistics-more-deaths-in-2020-than-2019-coronavirus-age-flu/
   return (
     <div className="App">
       <header className="App-header">

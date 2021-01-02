@@ -11,23 +11,16 @@ import {
   YAxis,
 } from "recharts";
 
+import { IMonthlyDeathsChartData, IStateAndNationalDeathCounts } from "types";
+import { DeathCountByState } from "./DeathCountByState";
+
 const baseUrl = "https://data.cdc.gov/resource/hmz2-vwda.json";
 const wholeUS = "state=UNITED%20STATES";
 const numberOfDeaths = "indicator=Number%20of%20Deaths";
 const periodMonthly = "period=Monthly";
 
-interface ICDCData {
-  // eslint-disable-next-line camelcase
-  data_value: number;
-  indicator: string;
-  month: string;
-  period: string;
-  state: string;
-  year: string;
-}
-
 export const GraphContainer = () => {
-  const [data, setData] = useState<ICDCData[]>([]);
+  const [data, setData] = useState<IStateAndNationalDeathCounts[]>([]);
   useEffect(() => {
     axios
       .get(`${baseUrl}?${wholeUS}&${numberOfDeaths}&${periodMonthly}`)
@@ -43,18 +36,22 @@ export const GraphContainer = () => {
   // hardcode `year`/`month`/`period`
   return (
     <main>
-      {/* {JSON.stringify(data)} */}
-      {data.length ? <LineChartByYear data={data} /> : "loading..."}
+      <label>2019 {"->"} 2020 by month</label>
+      <section>
+        {data.length ? <LineChartByYear data={data} /> : "loading..."}
+      </section>
+
+      <label>2019 {"->"} 2020 by weekending+state</label>
+      <section>
+        <DeathCountByState />
+      </section>
     </main>
   );
 };
 
-interface IChartFormattedData {
-  Month: string;
-  "2019 Deaths"?: number;
-  "2020 Deaths"?: number;
-}
-const formatChartData = (data: ICDCData[]): IChartFormattedData[] => {
+const formatChartData = (
+  data: IStateAndNationalDeathCounts[]
+): IMonthlyDeathsChartData[] => {
   const monthObject = {
     January: { 2019: undefined, 2020: undefined },
     February: { 2019: undefined, 2020: undefined },
@@ -136,8 +133,12 @@ const formatChartData = (data: ICDCData[]): IChartFormattedData[] => {
     },
   ];
 };
-const LineChartByYear = ({ data }: { data: ICDCData[] }) => {
-  const [formattedData, setData] = useState<IChartFormattedData[]>([]);
+const LineChartByYear = ({
+  data,
+}: {
+  data: IStateAndNationalDeathCounts[];
+}) => {
+  const [formattedData, setData] = useState<IMonthlyDeathsChartData[]>([]);
   useEffect(() => {
     setData(formatChartData(data));
   }, [data]);
