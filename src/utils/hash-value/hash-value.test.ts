@@ -1,4 +1,4 @@
-import { hashValue } from "./";
+import { hashValue } from ".";
 
 describe("hashValue util method", () => {
   it("allows comparisons of objects", () => {
