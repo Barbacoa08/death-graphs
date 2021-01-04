@@ -4,6 +4,7 @@ import {
   FormControlLabel,
   FormGroup,
   FormLabel,
+  makeStyles,
 } from "@material-ui/core";
 import { ChangeEvent, useCallback, useState } from "react";
 
@@ -13,7 +14,17 @@ import { DeathCountByMonth } from "./DeathCountByMonth";
 import { DeathCountByStateWeekending } from "./DeathCountByStateWeekending";
 import { DeathCountByWeekending } from "./DeathCountByWeekending";
 
+const useStyles = makeStyles(() => ({
+  header: {
+    marginBottom: 0,
+  },
+  section: {
+    marginBottom: 20,
+  },
+}));
+
 export const GraphContainer = () => {
+  const { header, section } = useStyles();
   const [chosenStates, setChosenState] = useState<string[]>([]);
   const handleStateSelection = useCallback(
     (e: ChangeEvent<HTMLInputElement>, c: boolean) => {
@@ -39,7 +50,21 @@ export const GraphContainer = () => {
 
   return (
     <main style={{ minWidth: 800, width: "50%" }}>
-      <h2>Deaths in the entirety of the US</h2>
+      <h2 className={header}>Deaths in the entirety of the US</h2>
+      <section className={section}>
+        <aside>
+          Data for the following graphs provided by the CDC{" "}
+          <a href="https://dev.socrata.com/foundry/data.cdc.gov/hmz2-vwda">
+            through this API
+          </a>
+        </aside>
+        <aside>
+          Details about the API{" "}
+          <a href="https://data.cdc.gov/NCHS/VSRR-State-and-National-Provisional-Counts-for-Liv/hmz2-vwda">
+            can be found here
+          </a>
+        </aside>
+      </section>
 
       <label>2019 {"->"} 2020 by month</label>
       <section>
@@ -53,7 +78,21 @@ export const GraphContainer = () => {
         <DeathCountByWeekending />
       </section>
 
-      <h2>Deaths by State in the US</h2>
+      <h2 className={header}>Deaths by State in the US</h2>
+      <section className={section}>
+        <aside>
+          Data for the following graphs provided by the CDC{" "}
+          <a href="https://dev.socrata.com/foundry/data.cdc.gov/muzy-jte6">
+            through this API
+          </a>
+        </aside>
+        <aside>
+          Details about the API{" "}
+          <a href="https://data.cdc.gov/NCHS/Weekly-Counts-of-Deaths-by-State-and-Select-Causes/muzy-jte6">
+            can be found here
+          </a>
+        </aside>
+      </section>
 
       <label>2019 {"->"} 2020 by weekending</label>
       <section>

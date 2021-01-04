@@ -1,6 +1,3 @@
-// data set: https://data.cdc.gov/NCHS/Weekly-Counts-of-Deaths-by-State-and-Select-Causes/muzy-jte6
-// API usage info: https://dev.socrata.com/foundry/data.cdc.gov/muzy-jte6
-
 import axios from "axios";
 import { useEffect, useState } from "react";
 import {
