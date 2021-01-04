@@ -12,6 +12,7 @@ import {
 } from "recharts";
 
 import { IMonthlyDeathsChartData, IStateAndNationalDeathCounts } from "types";
+import { stringToHex } from "utils";
 
 const baseUrl = "https://data.cdc.gov/resource/hmz2-vwda.json";
 const wholeUS = "state=UNITED%20STATES";
@@ -31,11 +32,10 @@ export const DeathCountByMonth = () => {
       });
   }, []);
 
-  // useMemo to get `indicator`, and possibly `state`
-  // hardcode `year`/`month`/`period`
   return <>{data.length ? <LineChartByYear data={data} /> : "loading..."}</>;
 };
 
+// TODO: this method could be improved
 const formatChartData = (
   data: IStateAndNationalDeathCounts[]
 ): IMonthlyDeathsChartData[] => {
@@ -145,8 +145,8 @@ const LineChartByYear = ({
         <YAxis type="number" domain={["dataMin", "dataMax"]} />
         <Tooltip />
         <Legend verticalAlign="top" height={36} />
-        <Line dataKey="2019 Deaths" stroke="#8884d8" />
-        <Line dataKey="2020 Deaths" stroke="#82ca9d" />
+        <Line dataKey="2019 Deaths" stroke={`#${stringToHex("2020 Deaths")}`} />
+        <Line dataKey="2020 Deaths" stroke={`#${stringToHex("2020 Deaths")}`} />
       </LineChart>
     </ResponsiveContainer>
   );

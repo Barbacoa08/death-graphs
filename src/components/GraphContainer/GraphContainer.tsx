@@ -6,6 +6,7 @@ import {
   FormLabel,
 } from "@material-ui/core";
 import { ChangeEvent, useCallback, useState } from "react";
+
 import { USStateList } from "types/shared";
 
 import { DeathCountByMonth } from "./DeathCountByMonth";

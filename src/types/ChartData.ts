@@ -10,7 +10,7 @@ export interface IWeeklyDeathsChartData {
   YearWeek: string;
   AllDeaths: number;
 
-  // states
+  // states (TODO: logic could/should be better, use `type USState`?)
   Alabama: string;
   Alaska: string;
   Arizona: string;

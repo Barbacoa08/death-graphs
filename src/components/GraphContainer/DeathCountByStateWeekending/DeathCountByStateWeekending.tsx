@@ -24,13 +24,14 @@ const urlStates = (selectedStates: string[]) =>
     .join(",")})`;
 
 export const DeathCountByStateWeekending = ({
-  chosenStates = ["Minnesota"],
+  chosenStates,
 }: {
   chosenStates: string[];
 }) => {
+  // TODO: memoize API results. We DO NOT want to spam the API if the user is experimenting
+  // further note, don't use `useMemo`, as it only memoizes the previous result (singular)
   const [apiData, setApiData] = useState<IWeeklyDeathsByStates[]>([]);
   useEffect(() => {
-    console.log(chosenStates);
     axios
       .get(`${baseUrl}?${urlStates(chosenStates)}`)
       .then((result) => setApiData(result.data))
@@ -128,7 +129,6 @@ const StackedBarChartDeathsByWeek = ({
         <YAxis />
         <Tooltip />
         <Legend verticalAlign="top" height={36} />
-        {/* <Bar dataKey="AllDeaths" fill="#8884d8" /> */}
         {chartBars}
       </BarChart>
     </ResponsiveContainer>
