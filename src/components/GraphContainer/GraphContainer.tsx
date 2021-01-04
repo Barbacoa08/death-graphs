@@ -13,7 +13,6 @@ import { DeathCountByStateWeekending } from "./DeathCountByStateWeekending";
 import { DeathCountByWeekending } from "./DeathCountByWeekending";
 
 export const GraphContainer = () => {
-  //
   const [chosenStates, setChosenState] = useState<string[]>([]);
   const handleStateSelection = useCallback(
     (e: ChangeEvent<HTMLInputElement>, c: boolean) => {
@@ -24,7 +23,17 @@ export const GraphContainer = () => {
         setChosenState(chosenStates.filter((s) => s !== clickedState));
       }
     },
-    []
+    [chosenStates]
+  );
+
+  const stateList = USStateList.map(
+    (s): JSX.Element => (
+      <FormControlLabel
+        control={<Checkbox onChange={handleStateSelection} name={s} />}
+        key={`state-checkbox-${s}`}
+        label={s}
+      />
+    )
   );
 
   return (
@@ -52,22 +61,10 @@ export const GraphContainer = () => {
 
       <FormControl component="fieldset" error={false} required>
         <FormLabel>Select 1 or more States to see their data.</FormLabel>
-        <FormGroup>
-          {USStateList.map(
-            (s): JSX.Element => (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    // BUG: handle isn't working in this context
-                    onChange={handleStateSelection}
-                    name={s}
-                  />
-                }
-                key={`state-checkbox-${s}`}
-                label={s}
-              />
-            )
-          )}
+        <FormGroup
+          style={{ flexDirection: "row", justifyContent: "space-between" }}
+        >
+          {stateList}
         </FormGroup>
       </FormControl>
 
