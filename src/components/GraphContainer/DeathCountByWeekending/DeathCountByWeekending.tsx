@@ -8,18 +8,23 @@ import {
   BarChart,
   CartesianGrid,
   Legend,
+  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
-  ResponsiveContainer,
 } from "recharts";
-import { IWeeklyDeathsByStates, IWeeklyDeathsChartData } from "types";
 
-export const DeathCountByState = () => {
+import { IWeeklyDeathsByStates, IWeeklyDeathsChartData } from "types";
+import { stringToHex } from "utils";
+
+const baseUrl = "https://data.cdc.gov/resource/muzy-jte6.json";
+const wholeUS = "jurisdiction_of_occurrence=United%20States";
+
+export const DeathCountByWeekending = () => {
   const [apiData, setApiData] = useState<IWeeklyDeathsByStates[]>([]);
   useEffect(() => {
     axios
-      .get("https://data.cdc.gov/resource/muzy-jte6.json")
+      .get(`${baseUrl}?${wholeUS}`)
       .then((result) => setApiData(result.data))
       .catch((e) => {
         console.error("recieved error:");
@@ -41,6 +46,7 @@ export const DeathCountByState = () => {
 const mapWeeklyDeathsToChartData = (
   apiData: IWeeklyDeathsByStates[]
 ): IWeeklyDeathsChartData[] => {
+  // TODO: update to be JUST "United States" (state breakdown is in `DeathCountByStateWeekending`)
   const weekObject = {};
   apiData.forEach((item) => {
     const yearweek = `${item.mmwryear}-${("0" + item.mmwrweek).slice(-2)}`;
@@ -76,16 +82,31 @@ const StackedBarChartDeathsByWeek = ({
 }: {
   data: IWeeklyDeathsByStates[];
 }) => {
+  const [chartBars, setChartBars] = useState<JSX.Element[]>([]);
   const [formattedData, setData] = useState<IWeeklyDeathsChartData[]>([]);
   useEffect(() => {
-    setData(mapWeeklyDeathsToChartData(data));
+    const chartData = mapWeeklyDeathsToChartData(data);
+    setData(chartData);
+
+    const bars: JSX.Element[] = [];
+    Object.keys(chartData[0]).forEach((child) => {
+      if (!["YearWeek", "AllDeaths"].includes(child)) {
+        bars.push(
+          <Bar
+            dataKey={child}
+            fill={`#${stringToHex(child)}`}
+            key={`barchart-bar-${child}`}
+            stackId="a"
+          />
+        );
+      }
+    });
+    setChartBars(bars);
   }, [data]);
 
   return (
-    <ResponsiveContainer width={500} height={300}>
+    <ResponsiveContainer width="100%" height={300}>
       <BarChart
-        width={500}
-        height={300}
         data={formattedData}
         margin={{
           top: 20,
@@ -95,14 +116,11 @@ const StackedBarChartDeathsByWeek = ({
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
+        <XAxis dataKey="YearWeek" />
         <YAxis />
         <Tooltip />
         <Legend verticalAlign="top" height={36} />
-        <Bar dataKey="Alabama" stackId="a" />
-        <Bar dataKey="Alaska" stackId="a" />
-        <Bar dataKey="Arizona" stackId="a" />
-        <Bar dataKey="Arkansas" stackId="a" />
+        {chartBars}
       </BarChart>
     </ResponsiveContainer>
   );
