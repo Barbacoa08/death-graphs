@@ -51,7 +51,7 @@ export const USStateList = [
   "Wyoming",
 ];
 
-// TODO: unused, unsure if it's useful...
+// TODO: remove if unused
 export type USState =
   | "Alabama"
   | "Alaska"

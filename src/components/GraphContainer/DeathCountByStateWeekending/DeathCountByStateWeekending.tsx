@@ -11,7 +11,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { IWeeklyDeathsByStates, IWeeklyDeathsChartData } from "types";
+import { IWeeklyDeathsByStates } from "types";
 import { stringToHex } from "utils";
 
 const baseUrl = "https://data.cdc.gov/resource/muzy-jte6.json";
@@ -50,35 +50,37 @@ export const DeathCountByStateWeekending = ({
   );
 };
 
+interface IWeeklyDeathsByStateYear extends Record<string, string> {
+  YearWeek: string;
+}
+
 const mapWeeklyDeathsToChartData = (
   apiData: IWeeklyDeathsByStates[]
-): IWeeklyDeathsChartData[] => {
+): IWeeklyDeathsByStateYear[] => {
   const weekObject = {};
   apiData.forEach((item) => {
-    const yearweek = `${item.mmwryear}-${("0" + item.mmwrweek).slice(-2)}`;
+    const yearweek = ("0" + item.mmwrweek).slice(-2);
     if (!weekObject[yearweek]) {
-      weekObject[yearweek] = { AllDeaths: 0 };
+      weekObject[yearweek] = {};
     }
 
-    weekObject[yearweek][item.jurisdiction_of_occurrence] = Number(
-      item.all_cause
-    );
-    weekObject[yearweek].AllDeaths += Number(item.all_cause);
+    weekObject[yearweek][
+      `${item.jurisdiction_of_occurrence}-${item.mmwryear}`
+    ] = Number(item.all_cause) || undefined;
   });
 
-  const result: IWeeklyDeathsChartData[] = [];
+  const result: IWeeklyDeathsByStateYear[] = [];
   Object.keys(weekObject)
     .sort()
     .forEach((yearweek) => {
       const item = {
         YearWeek: yearweek,
-        AllDeaths: weekObject[yearweek].AllDeaths,
       };
       Object.keys(weekObject[yearweek]).forEach((child) => {
         item[child] = weekObject[yearweek][child];
       });
 
-      result.push(item as IWeeklyDeathsChartData);
+      result.push(item as IWeeklyDeathsByStateYear);
     });
 
   return result;
@@ -89,20 +91,21 @@ const StackedBarChartDeathsByWeek = ({
   data: IWeeklyDeathsByStates[];
 }) => {
   const [chartBars, setChartBars] = useState<JSX.Element[]>([]);
-  const [formattedData, setData] = useState<IWeeklyDeathsChartData[]>([]);
+  const [formattedData, setData] = useState<IWeeklyDeathsByStateYear[]>([]);
   useEffect(() => {
     const chartData = mapWeeklyDeathsToChartData(data);
     setData(chartData);
 
     const bars: JSX.Element[] = [];
     Object.keys(chartData[0]).forEach((child) => {
-      if (!["YearWeek", "AllDeaths"].includes(child)) {
+      if (!["YearWeek"].includes(child)) {
+        const [, year] = child.split("-");
         bars.push(
           <Bar
             dataKey={child}
             fill={`#${stringToHex(child)}`}
             key={`barchart-bar-${child}`}
-            stackId="a"
+            stackId={year === "2019" ? "a" : "b"}
           />
         );
       }
