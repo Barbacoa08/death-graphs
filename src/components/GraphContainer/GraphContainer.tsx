@@ -13,6 +13,7 @@ import { USStateList } from "types/shared";
 import { DeathCountByMonth } from "./DeathCountByMonth";
 import { DeathCountByStateWeekending } from "./DeathCountByStateWeekending";
 import { DeathCountByWeekending } from "./DeathCountByWeekending";
+import { HistoricalData } from "./HistoricalData";
 
 const useStyles = makeStyles(() => ({
   header: {
@@ -108,9 +109,20 @@ export const GraphContainer = () => {
         </FormGroup>
       </FormControl>
 
-      {/**
-       * TODO: <HistoricalData />
-       */}
+      <h2 className={header}>Historical Deaths in the US by month</h2>
+      <section className={section}>
+        <aside>
+          Data for the following graphs provided by the CDC{" "}
+          <a href="https://wonder.cdc.gov/controller/saved/D76/D99F863">
+            as found here
+          </a>
+        </aside>
+      </section>
+
+      <label>1999 {"->"} 2019</label>
+      <section>
+        <HistoricalData />
+      </section>
     </main>
   );
 };
