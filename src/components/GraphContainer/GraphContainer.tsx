@@ -109,7 +109,7 @@ export const GraphContainer = () => {
         </FormGroup>
       </FormControl>
 
-      <h2 className={header}>Historical Deaths in the US by month</h2>
+      <h2 className={header}>Historical Deaths in the US by year</h2>
       <section className={section}>
         <aside>
           Data for the following graphs provided by the CDC{" "}
